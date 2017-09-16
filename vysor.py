@@ -61,7 +61,7 @@ class Vysor(object):
         crop = self.crop(gamescr,195,305,972,840)
         # cv2.imshow("Region of Interest", crop)
         # cv2.waitKey(0)
-        scene.detectEnemy(crop)
+        return scene.detectEnemy(crop)
 
     def get_window_drop(self):
         img = self.frame.copy()

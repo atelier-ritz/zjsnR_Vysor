@@ -14,13 +14,13 @@ def detectHP(img):
     hp = []
     height, width = img.shape[:2]
     singleWidth = int(width/6)
-    print(width,height)
+    # print(width,height)
     print('====== Party HP detection result ======')
     for i in range(6):
         crop = img[int(height*0.4):int(height*0.6),int(singleWidth*(i+0.1)):int(singleWidth*(i+0.15))]
         # crop = img[5:height-5,int(singleWidth*i):int(singleWidth*(i+1))]
-        cv2.imshow("Region of Interest", crop)
-        cv2.waitKey(0)
+        # cv2.imshow("Region of Interest", crop)
+        # cv2.waitKey(0)
         average_color_per_row = np.average(crop, axis=0)
         average_color = np.average(average_color_per_row, axis=0)
         # print(average_color)
@@ -52,7 +52,9 @@ def detectEnemy(img):
         crop = img[y:int(y+singleHeight*0.68),x:int(x+singleWidth*0.95)]
         # cv2.imwrite('{}.png'.format(i), crop)
         enemyType = getEnemyType61(crop)
+        enemy.append(enemyType)
         print("{} - {}".format(i+1,enemyType))
+    return enemy
 
 def getEnemyType61(imgOfOneEnemy):
     hist = getHistBGR(imgOfOneEnemy)
