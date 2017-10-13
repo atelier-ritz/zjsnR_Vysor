@@ -16,6 +16,7 @@ class MotorManager(object):
     def _sendCommand(self,command):
         client = self.client
         client.send_data(command)
+        print('command sent {}'.format(command))
 
     def motorgo(self,motorId,val):
         if val == 0 :
@@ -31,7 +32,33 @@ class MotorManager(object):
     def setParam(self,rpm1,rpm2,stepperrev1,stepperrev2):
         command = 'setparam,{},{},{},{}'.format(rpm1,rpm2,stepperrev1,stepperrev2)
         self._sendCommand(command)
-
+    def powerOn(self):
+        command = 'powerOn'
+        self._sendCommand(command)
+    def powerOff(self):
+        command = 'powerOff'
+        self._sendCommand(command)
+    def motorGoToXYAndTouch(self,goal_pixelX,goal_pixelY,period):
+        args = [0,0,0,0,0]
+        goal_steps = int((self.corner[0] - self.origin[0]) / 1920 * goal_pixelX + self.origin[0])
+        val = goal_steps - self.position[0]
+        if val == 0 : val = 1
+        step = abs(val)
+        direction = int(val/step)
+        self.position[0] += val
+        args[0] = step
+        args[1] = direction
+        goal_steps = int((self.corner[1] - self.origin[1]) / 1080 * goal_pixelY + self.origin[1])
+        val = goal_steps - self.position[1]
+        if val == 0 : val = 1
+        step = abs(val)
+        direction = int(val/step)
+        self.position[1] += val
+        args[2] = step
+        args[3] = direction
+        args[4] = period
+        command = 'motorGoAndTouch,{},{},{},{},{}'.format(args[0],args[1],args[2],args[3],args[4])
+        self._sendCommand(command)
     def motorGoTo(self,motorId,goal_steps):
         current = self.position[motorId]
         val = goal_steps - current

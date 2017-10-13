@@ -308,7 +308,7 @@
       <property name="title">
        <string>Motor Control</string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -362,7 +362,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>120</x>
@@ -443,13 +443,13 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>180</x>
          <y>20</y>
          <width>77</width>
-         <height>151</height>
+         <height>170</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -624,7 +624,7 @@
       <property name="title">
        <string>Enconder</string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>82</x>
@@ -663,7 +663,7 @@
            <number>2000</number>
           </property>
           <property name="value">
-           <number>590</number>
+           <number>605</number>
           </property>
          </widget>
         </item>
@@ -676,7 +676,7 @@
            <number>2000</number>
           </property>
           <property name="value">
-           <number>330</number>
+           <number>350</number>
           </property>
          </widget>
         </item>
@@ -708,7 +708,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -741,7 +741,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>198</x>
@@ -787,7 +787,7 @@
       <property name="title">
        <string>Motor Monitor</string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -853,6 +853,19 @@
         <string>Auto 6-1</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QCheckBox" name="cbx_power">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>540</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Power</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">

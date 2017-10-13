@@ -44,6 +44,7 @@ class GUI(QtWidgets.QMainWindow,Ui_MainWindow):
         self.btn_setOrigin.clicked.connect(self.on_btn_setOrigin)
         self.btn_setCorner.clicked.connect(self.on_btn_setCorner)
         self.btn_autosetEncoder.clicked.connect(self.on_btn_autosetEncoder)
+        self.cbx_power.toggled.connect(self.on_cbx_power)
         # macros
         self.btn_auto61.clicked.connect(self.on_btn_auto61)
         # timer
@@ -79,7 +80,8 @@ class GUI(QtWidgets.QMainWindow,Ui_MainWindow):
     def on_btn_party_HP(self):
         self.capture.get_window_party_hp()
     def on_btn_drop(self):
-        self.capture.get_window_drop()
+        # self.capture.get_window_drop()
+        self.capture.isScene('drop')
     #======================================================
     # motor
     #======================================================
@@ -123,70 +125,85 @@ class GUI(QtWidgets.QMainWindow,Ui_MainWindow):
         y_pixel = self.spb_currentY_pixel.value()
         x_steps = mm.position[1]
         y_steps = mm.position[0]
-        originX_steps = - (x_pixel / 1920 * 590) + x_steps
-        originY_steps = - (y_pixel / 1080 * 330) + y_steps
-        cornerX_steps = originX_steps + 590
-        cornerY_steps = originY_steps + 330
+        originX_steps = - (x_pixel / 1920 * 605) + x_steps
+        originY_steps = - (y_pixel / 1080 * 350) + y_steps
+        cornerX_steps = originX_steps + 605
+        cornerY_steps = originY_steps + 350
         self.spb_corner1.setValue(cornerY_steps)
         self.spb_corner2.setValue(cornerX_steps)
         self.spb_origin1.setValue(originY_steps)
         self.spb_origin2.setValue(originX_steps)
         mm.setOrigin(originX_steps, originY_steps)
         mm.setCorner(cornerX_steps, cornerY_steps)
+    def on_cbx_power(self,boolean):
+        if boolean:
+            mm.powerOn()
+        else:
+            mm.powerOff()
     #======================================================
     # macros
     #======================================================
     def on_btn_auto61(self):
-        mm.motorGoToX(1404)
-        time.sleep(.5)
-        mm.motorGoToY(274)
+        flagBuji = 0
         while True:
-            print(client.isMotorDone)
-            if sum(client.isMotorDone) == 2:
-                break
-            time.sleep(.5)
-        time.sleep(.5)
-        mm.touch(.2)
-        time.sleep(2.5)
-        mm.touch(.2)
-        time.sleep(.5)
-        mm.motorGoToX(965)
-        time.sleep(.5)
-        mm.motorGoToY(997)
-        while True:
-            print(client.isMotorDone)
-            if sum(client.isMotorDone) == 2:
-                break
-            time.sleep(.5)
-        time.sleep(.5)
-        mm.touch(.2)
-        time.sleep(3)
-        mm.touch(.2)
-        time.sleep(1)
-        mm.touch(.2)
-        time.sleep(1)
-        mm.touch(.2)
-        time.sleep(1)
-        mm.touch(.2)
-        time.sleep(1)
-        mm.touch(.2)
-        while True:
+            mm.motorGoToXYAndTouch(1438,350,0.2) # chuzheng
+            while client.isBusy: time.sleep(1)
+            while not self.capture.isScene('chuzhengzhunbei'):
+                mm.touch(.2)
+                time.sleep(2)
+            if flagBuji == 4:
+                flagBuji = 0
+                mm.motorGoToXYAndTouch(1815,104,0.2) # buji
+                while client.isBusy: time.sleep(1)
+                time.sleep(2)
+                while not self.capture.isScene('buji'):
+                    mm.touch(.2)
+                    time.sleep(2)
+                mm.motorGoToXYAndTouch(1277,795,0.2) # buji confirm
+                while client.isBusy: time.sleep(1)
+                while not self.capture.isScene('chuzhengzhunbei'):
+                    mm.touch(.2)
+                    time.sleep(2)
+            mm.motorGoToXYAndTouch(963,981,0.2)  # chuzheng kaishi
+            while client.isBusy: time.sleep(1)
+            time.sleep(2)
+            while not self.capture.isScene('zhandouzhunbei'):
+                mm.touch(.2)
+                time.sleep(2)
             enemy = self.capture.get_window_enemy_party()
-            if enemy[0] == 'ss' or enemy[0] == 'ss+' or enemy[0] == 'cv':
-                break
-            time.sleep(1)
-        if enemy[0] == 'ss' or enemy[0] == 'ss+':
-            mm.motorGoToX(1370)
-            time.sleep(.5)
-            mm.motorGoToY(924)
-            time.sleep(3)
-            mm.touch(.2)
-        else:
-            mm.motorGoToX(1601)
-            time.sleep(.5)
-            mm.motorGoToY(924)
-            time.sleep(3)
-            mm.touch(.2)
+            if enemy[0] == 'ss' or enemy[0] == 'ss+':
+                mm.motorGoToXYAndTouch(1370,924,0.2) # fight
+                while client.isBusy: time.sleep(1)
+                while not self.capture.isScene('xuanzezhenxing'):
+                    mm.touch(.2)
+                    time.sleep(2)
+                mm.motorGoToXYAndTouch(1556,917,0.2) # zhenxing
+                while client.isBusy: time.sleep(1)
+                time.sleep(1)
+                mm.powerOff()
+                time.sleep(1)
+                while not self.capture.isScene('zhandoujieshu'): time.sleep(1)
+                mm.powerOn()
+                time.sleep(1)
+                mm.touch(.2)
+                time.sleep(2)
+                mm.motorGoToXYAndTouch(1725,986,0.2) # before drop
+                while client.isBusy: time.sleep(1)
+                time.sleep(2)
+                mm.motorGoToXYAndTouch(1188,757,0.2) # huigang
+                while client.isBusy: time.sleep(1)
+                time.sleep(2)
+                while not self.capture.isScene('huigang'):
+                    mm.touch(.2)
+                    time.sleep(2)
+                flagBuji += 1
+            else:
+                mm.motorGoToXYAndTouch(1601,924,0.2) # retreat
+                while client.isBusy: time.sleep(1)
+            time.sleep(2)
+            while not self.capture.isScene('zhujiemian'):
+                mm.touch(.2)
+                time.sleep(2)
 
     #======================================================
     # update

@@ -12,7 +12,6 @@ class Vysor(object):
     RESOLUTION = [1920, 1080] # resolution of the smart phone screen
     UPDATE_PERIOD = 0.01 # capture every 0.01 sec
     dictionary = {}
-
     def __init__(self):
         self.frame = []
         self.rect = [0, 0, 0, 0] # x1,y1,x2,y2. capture rect in PC display coordinate
@@ -73,6 +72,40 @@ class Vysor(object):
         # cv2.waitKey(0)
         # cv2.imwrite('drop.png', crop)
         scene.detectDrop(crop,self.dictionary)
+
+    def isScene(self,sceneName):
+        img = self.frame.copy()
+        rgb = self.fmtConvert(img)
+        x1, y1, x2, y2 = tuple(self.rect)
+        gamescr = rgb[y1:y2,x1:x2]
+        if sceneName == 'chuzhengzhunbei':
+            crop = self.crop(gamescr,1700,41,1920,1080)
+            ret = scene.detectScene(crop,'chuzhengzhunbei')
+        if sceneName == 'zhandouzhunbei':
+            crop = self.crop(gamescr,965,258,1378,990)
+            ret = scene.detectScene(crop,'zhandouzhunbei')
+        if sceneName == 'xuanzezhenxing':
+            crop = self.crop(gamescr,1689,446,1820,600)
+            ret = scene.detectScene(crop,'xuanzezhenxing')
+        if sceneName == 'zhandoujieshu':
+            crop = self.crop(gamescr,950,900,1900,1050)
+            ret = scene.detectScene(crop,'zhandoujieshu')
+        if sceneName == 'huigang':
+            crop = self.crop(gamescr,560,590,1415,780)
+            ret = scene.detectScene(crop,'huigang')
+        if sceneName == 'buji':
+            crop = self.crop(gamescr,1700,41,1920,1080)
+            ret = scene.detectScene(crop,'buji')
+        if sceneName == 'zhujiemian':
+            crop = self.crop(gamescr,1357,253,1558,390)
+            ret = scene.detectScene(crop,'zhujiemian')
+        if sceneName == 'drop':
+            crop = self.crop(gamescr,60,896,90,996)
+            # cv2.imshow("Region of Interest", crop)
+            # cv2.waitKey(0)
+            # cv2.imwrite(sceneName + '.png', crop)
+            ret = scene.detectScene(crop,'drop')
+        return ret
 
     def set_wh(self):
         self.width = self.rect[2] - self.rect[0]

@@ -46,14 +46,15 @@ def detectEnemy(img):
     singleHeight = int(height/3)
     capturedHist = []
     print('====== Enemy type detection result ======')
-    for i in range(6):
-        x = singleWidth * (i % 2)
-        y = singleHeight * math.floor(i / 2)
-        crop = img[y:int(y+singleHeight*0.68),x:int(x+singleWidth*0.95)]
-        # cv2.imwrite('{}.png'.format(i), crop)
-        enemyType = getEnemyType61(crop)
-        enemy.append(enemyType)
-        print("{} - {}".format(i+1,enemyType))
+    i=1
+    # for i in range(6):
+    x = singleWidth * (i % 2)
+    y = singleHeight * math.floor(i / 2)
+    crop = img[y:int(y+singleHeight*0.68),x:int(x+singleWidth*0.95)]
+    # cv2.imwrite('{}.png'.format(i), crop)
+    enemyType = getEnemyType61(crop)
+    enemy.append(enemyType)
+    print("{} - {}".format(i+1,enemyType))
     return enemy
 
 def getEnemyType61(imgOfOneEnemy):
@@ -82,6 +83,16 @@ def detectDrop(img,dictionary):
     dropID = max(similarity.keys(), key=(lambda key: similarity[key]))
     print('====== Detect drop result ======')
     print(dictionary[int(dropID)])
+
+def detectScene(img,sceneName):
+    hist = getHistBGR(img)
+    sampleImg = cv2.imread(PATH_SCENE + sceneName + ".png")
+    sampleHist = getHistBGR(sampleImg)
+    similarity = compareHistBGR(hist,sampleHist)
+    print(similarity)
+    if similarity > 2.7:
+        return True
+    return False
 
 def compareHistBGR(imghist1,imghist2):
     similarityBGR = []
